@@ -356,10 +356,10 @@ class CycleGAN():
                 saver.save(sess,os.path.join(check_dir,"cyclegan"),global_step=epoch)
 
                 # Dealing with the learning rate as per the epoch number is not used in this setup
-                if(epoch < 5) :
+                if(epoch < 50) :
                     curr_lr = 0.0002
                 else:
-                    curr_lr = 0.0002 - 0.0002*(epoch-5)/5
+                    curr_lr = 0.0002 - 0.0002*(epoch-50)/50
 
                 
 
