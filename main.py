@@ -31,7 +31,7 @@ temp_check = 0
 
 
 max_epoch = 1
-max_images = 10000
+max_images = 600
 
 max_images_test= 100
 
@@ -351,7 +351,7 @@ class CycleGAN():
                 os.makedirs(check_dir)
 
             # Training Loop
-            for epoch in range(sess.run(self.global_step),5):                
+            for epoch in range(sess.run(self.global_step),100):                
                 print ("In the epoch ", epoch)
                 saver.save(sess,os.path.join(check_dir,"cyclegan"),global_step=epoch)
 
