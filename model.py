@@ -82,13 +82,17 @@ def build_generator_MNIST(inputgen, name="generator"):
         o_c2 = general_conv2d(o_c1, 128, 3, 3, 2, 2, 0.02, "SAME", "cv2")
         
         # 3) ResNet-Blocks on 14x14-Features
-        r = o_c2
-        for i in range(3): 
-            r = build_resnet_block(r, 128, name=f"resnet_{i+1}")
+        
+        r_1 = build_resnet_block(o_c2, 128, name=f"resnet_{1}")
+
+        r_2 = build_resnet_block(r_1, 128, name=f"resnet_{2}")
+
+        r_3 = build_resnet_block(r_2, 128, name=f"resnet_{3}")
+        
 
         # 4) Upsampling: 128 -> 64, 14x14 -> 28x28
         batch_size = tf.shape(inputgen)[0]
-        o_d1 = general_deconv2d(r, [batch_size, 28, 28, 64],
+        o_d1 = general_deconv2d(r_3, [batch_size, 28, 28, 64],
                         64, 3, 3, 2, 2, 0.02, "SAME", "decv1")
         
         # 5) Final Conv on 1 channel (28x28 -> 28x28)
@@ -104,15 +108,15 @@ def build_discriminator_MNIST(inputdisc, name="discriminator"):
     with tf.compat.v1.variable_scope(name):
         # First conv: 1 -> 64 channels
         o_c1 = general_conv2d(inputdisc, 64, 4, 4, 2, 2, 0.02, "SAME", "cv1", do_norm=False, relufactor=0.2)
-
+       
         # Second conv: 64 ->128 channels
         o_c2 = general_conv2d(o_c1, 128, 4, 4, 2, 2, 0.02, "SAME", "cv2", relufactor=0.2)
-
+       
         # Third conv: 128 -> 256 channels
         o_c3 = general_conv2d(o_c2, 256, 4, 4, 2, 2, 0.02, "SAME", "conv3", relufactor=0.2)
-
+        
         # Final conv: 256 ->1 channel
         o_fc = general_conv2d(o_c3, 1, 4, 4, 1, 1, 0.02, "VALID", "fc", do_norm=False, do_relu=False)
-
+        
         return o_fc
 
